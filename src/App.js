@@ -11,7 +11,6 @@ function App() {
   if(user===null){
     return <Loader/>
   }
-
   return(
       <>
         <Toaster position="top-right" />

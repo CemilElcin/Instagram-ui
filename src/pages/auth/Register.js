@@ -1,8 +1,8 @@
 import React from "react";
 import FormInput from "components/FormInput";
 import { AiFillFacebook } from "react-icons/ai";
-import { useNavigate, useLocation } from "react-router-dom";
-import { login } from "firebase.js";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { register } from "firebase.js";
 import { Formik, Form } from "formik";
 import { RegisterSchema } from "validation";
 import Button from "components/Button";
@@ -12,7 +12,7 @@ export default function Register() {
   const location = useLocation();
 
   const handleSubmit = async (values, actions) => {
-    const response = await login(values.userName, values.password);
+    const response = await register(values);
     if (response) {
       navigate(location.state?.return_url || "/", {
         replace: true,
@@ -27,6 +27,7 @@ export default function Register() {
           <img
             className="h-[51px]"
             src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png"
+            alt=""
           />
         </a>
         <p className="text-[17px] font-semibold text-[#8e8e8e] text-center mb-6">
@@ -64,7 +65,7 @@ export default function Register() {
               <FormInput type="password" name="password" label="Password" />
               <p className="text-xs text-[#8e8e8e] py-2">
               Hizmetimizi kullanan kişiler senin iletişim bilgilerini Instagram'a yüklemiş olabilir. <a href="#">Daha Fazla Bilgi Al</a>
-              <br></br>
+              <br></br><br></br>
               Kaydolarak, Koşullarımızı, Gizlilik İlkemizi ve Çerezler İlkemizi kabul etmiş olursun.
               </p>
               <Button
@@ -74,21 +75,16 @@ export default function Register() {
                 Sign up
               </Button>
               
-              <a
-                href="#"
-                className="text-sm flex items-center justify-center text-link"
-              >
-                Forgot Password?
-              </a>
             </Form>
           )}
         </Formik>
       </div>
       <div className="bg-white border p-4 text-sm text-center">
-        Don`t have an account?
-        <a href="#" className="font-semibold text-brand">
-          Sign up
-        </a>
+        Have an account?
+        <Link to="/auth/login" className="font-semibold text-brand">
+          Log in
+        </Link>
+        
       </div>
     </div>
   );

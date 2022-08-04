@@ -1,6 +1,14 @@
 import { initializeApp } from "firebase/app";
-import { getAuth,signOut ,onAuthStateChanged  , signInWithEmailAndPassword } from "firebase/auth";
-import toast from "react-hot-toast"
+import {
+  getAuth,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import toast from "react-hot-toast";
 import { userHandle } from "utils";
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,25 +23,58 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db=getFirestore(app)
 
-onAuthStateChanged(auth,user=>{
-    userHandle(user || false)
-})
+// Auth Control
+onAuthStateChanged(auth, (user) => {
+  if(user){
+    userHandle(user)
+  }else{
+    userHandle(false);
+  }
+  
+});
 
 export const login = async (email, password) => {
   try {
-    const response= await signInWithEmailAndPassword(auth, email, password)
-    console.log(response.user)
-    
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    return response.user
   } catch (e) {
-    toast.error(e.code)
+    toast.error(e.code);
   }
 };
+export const register = async ({ email, full_name, username, password }) => {
+  try {
+    const response = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-export const logout=async()=>{
-  try{
-    await signOut(auth)
-  }catch(err){
-    toast.error(err.code)
+    // add a users collection
+    await setDoc(doc(db,"users",response.user.uid),{
+      full_name,
+      username,
+      followers:[],
+      following:[],
+      notifications:[]
+    })
+
+
+    await updateProfile(auth.currentUser, {
+      displayName: full_name
+    });
+    return response.user
+  } catch (e) {
+    toast.error(e.code);
   }
-}
+
+};
+
+export const logout = async () => {
+  try {
+    await signOut(auth);
+  } catch (err) {
+    toast.error(err.code);
+  }
+};

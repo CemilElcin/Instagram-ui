@@ -1,6 +1,6 @@
 import React from "react";
 import FormInput from "components/FormInput";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { AiFillFacebook } from "react-icons/ai";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "firebase.js";
@@ -46,7 +46,7 @@ export default function Login() {
   };
 
   return (
-    <div className="h-full w-full flex flex-wrap overflow-auto  items-center gap-x-8 justify-center">
+    <div className="h-full w-full flex flex-wrap overflow-auto items-center gap-x-8 justify-center">
       <div className="hidden md:block w-[380px] h-[581px] bg-logo-pattern relative bg-[length:468.32px_634.15px] bg-[top_left_-46px]">
         <div
           className="w-[250px] h-[538px] absolute top-[27px] right-[18px]"
@@ -57,6 +57,7 @@ export default function Login() {
               key={key}
               className="w-full h-full absolute top-0 left-0 opacity-0 transition-opacity duration-1000 ease-linear"
               src={image}
+              alt=""
             />
           ))}
         </div>
@@ -67,6 +68,7 @@ export default function Login() {
             <img
               className="h-[51px]"
               src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png"
+              alt=""
             />
           </a>
           <Formik
